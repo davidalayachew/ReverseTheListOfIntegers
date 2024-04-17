@@ -1,12 +1,20 @@
 
 package ReverseTheListOfIntegersPackage;
 
+import javax.swing.SwingUtilities;
 import java.util.List;
 
 public class Main
 {
 
    public static void main(final String[] args)
+   {
+   
+      SwingUtilities.invokeLater(GUI::createGUI);
+   
+   }
+   
+   public static void algorithmExampleRuns()
    {
    
       System.out.println("ReverseTheListOfIntegers");

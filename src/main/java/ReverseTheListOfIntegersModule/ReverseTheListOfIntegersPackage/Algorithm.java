@@ -63,12 +63,13 @@ public final class Algorithm
          
             final int newValue = j;
          
-            final Optional<GameProgress> splitResult = gameProgress.split(index, newValue);
+            final Result splitResult = gameProgress.split(index, newValue);
          
-            if (splitResult.isPresent())
+            switch (splitResult)
             {
             
-               successfulSubResults.add(splitResult.orElseThrow());
+               case  Success success   -> successfulSubResults.add(success.gameProgress());
+               case  Failure _         -> {}
             
             }
          
@@ -172,12 +173,13 @@ public final class Algorithm
          
             final int newValue = j;
          
-            final Optional<GameProgress> splitResult = gameProgress.split(index, newValue);
+            final Result splitResult = gameProgress.split(index, newValue);
          
-            if (splitResult.isPresent())
+            switch (splitResult)
             {
             
-               successfulResults.add(splitResult.orElseThrow());
+               case  Success success   -> successfulResults.add(success.gameProgress());
+               case  Failure _         -> {}
             
             }
          

@@ -46,7 +46,7 @@ public record GameProgress(List<Round> rounds, Goal goal)
    
    }
 
-   public Optional<GameProgress> split(final int index, final int newLeftValue)
+   public Result split(final int index, final int newLeftValue)
    {
    
       if (index < 0)
@@ -59,7 +59,7 @@ public record GameProgress(List<Round> rounds, Goal goal)
       if (newLeftValue < 0)
       {
       
-         return Optional.empty();
+         return new Failure("New values after a split must contain positive numbers! You chose " + newLeftValue);
       
       }
    
@@ -68,14 +68,23 @@ public record GameProgress(List<Round> rounds, Goal goal)
       if (index >= finalRoundList.size())
       {
       
-         return Optional.empty();
+         throw
+            new
+               IndexOutOfBoundsException
+               (
+                  "index must be <= finalRoundList.size()!"
+                  + " index = " + index
+                  + " finalRoundList.size() = " + finalRoundList.size()
+               )
+               ;
       
       }
    
       if (finalRoundList.contains(newLeftValue))
       {
       
-         return Optional.empty();
+         return new Failure("The list of numbers cannot contain duplicates!"
+            + " You entered " + newLeftValue + ", which already exists in the list!");
       
       }
    
@@ -86,21 +95,46 @@ public record GameProgress(List<Round> rounds, Goal goal)
       if (newRightValue <= 0)
       {
       
-         return Optional.empty();
+         return 
+            new 
+               Failure
+               (
+                  "All numbers in the list must be positive!"
+                  + " After splitting " + originalValue + ", you will end up with "
+                  + newLeftValue + " and " + newRightValue + "!"
+               )
+               ;
       
       }
    
       if (newLeftValue == newRightValue)
       {
       
-         return Optional.empty();
+         return
+            new
+               Failure
+               (
+                  "The list of numbers cannot contain duplicates!"
+                  + " After splitting " + originalValue + ", you will end up with "
+                  + newLeftValue + " and " + newRightValue + "!"
+               )
+               ;
       
       }
    
       if (finalRoundList.contains(newRightValue))
       {
       
-         return Optional.empty();
+         return
+            new
+               Failure
+               (
+                  "The list of numbers cannot contain duplicates!"
+                  + " After splitting " + originalValue + ", you will end up with "
+                  + newLeftValue + " and " + newRightValue 
+                  + ", and " + newRightValue + " already exists in the list!"
+               )
+               ;
       
       }
    
@@ -114,7 +148,7 @@ public record GameProgress(List<Round> rounds, Goal goal)
    
       final GameProgress newGameProgress = this.add(newRound);
    
-      return Optional.of(newGameProgress);
+      return new Success(newGameProgress);
    
    }
 
@@ -127,7 +161,7 @@ public record GameProgress(List<Round> rounds, Goal goal)
          throw new IllegalArgumentException("leftIndex cannot be < 0! leftIndex = " + leftIndex);
       
       }
-      
+   
       final int rightIndex = leftIndex + 1;
    
       final List<Integer> finalRoundList = this.rounds().getLast().list();
@@ -141,9 +175,9 @@ public record GameProgress(List<Round> rounds, Goal goal)
    
       final int leftValue = finalRoundList.get(leftIndex);
       final int rightValue = finalRoundList.get(rightIndex);
-      
+   
       final int newValue = leftValue + rightValue;
-      
+   
       if (finalRoundList.contains(newValue))
       {
       
@@ -170,7 +204,7 @@ public record GameProgress(List<Round> rounds, Goal goal)
    
       final List<Integer> finalRoundList = this.rounds().getLast().list();
       final List<Integer> goalList = this.goal().list();
-      
+   
       return finalRoundList.equals(goalList);
    
    }
