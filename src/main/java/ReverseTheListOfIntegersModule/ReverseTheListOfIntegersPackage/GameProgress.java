@@ -52,7 +52,7 @@ public record GameProgress(List<Round> rounds, Goal goal)
       if (index < 0)
       {
       
-         throw new IllegalArgumentException("index cannot be < 0! index = " + index);
+         return new Failure("index cannot be < 0! index = " + index);
       
       }
    
@@ -68,9 +68,9 @@ public record GameProgress(List<Round> rounds, Goal goal)
       if (index >= finalRoundList.size())
       {
       
-         throw
+         return
             new
-               IndexOutOfBoundsException
+               Failure
                (
                   "index must be <= finalRoundList.size()!"
                   + " index = " + index
@@ -152,13 +152,13 @@ public record GameProgress(List<Round> rounds, Goal goal)
    
    }
 
-   public Optional<GameProgress> combine(final int leftIndex)
+   public Result combine(final int leftIndex)
    {
    
       if (leftIndex < 0)
       {
       
-         throw new IllegalArgumentException("leftIndex cannot be < 0! leftIndex = " + leftIndex);
+         return new Failure("leftIndex cannot be < 0! leftIndex = " + leftIndex);
       
       }
    
@@ -169,7 +169,15 @@ public record GameProgress(List<Round> rounds, Goal goal)
       if (rightIndex >= finalRoundList.size())
       {
       
-         return Optional.empty();
+         return
+            new
+               Failure
+               (
+                  "rightIndex must be < finalRoundList.size()!"
+                  + " rightIndex = " + rightIndex
+                  + " finalRoundList.size() = " + finalRoundList.size()
+               )
+               ;
       
       }
    
@@ -181,7 +189,16 @@ public record GameProgress(List<Round> rounds, Goal goal)
       if (finalRoundList.contains(newValue))
       {
       
-         return Optional.empty();
+         return
+            new
+               Failure
+               (
+                  "The list of numbers cannot contain duplicates!"
+                  + " After combining " + leftValue + " and " + rightValue
+                  + ", you will end up with " + newValue + "! "
+                  + newValue + " already exists in the list!"
+               )
+               ;
       
       }
    
@@ -195,7 +212,7 @@ public record GameProgress(List<Round> rounds, Goal goal)
    
       final GameProgress newGameProgress = this.add(newRound);
    
-      return Optional.of(newGameProgress);
+      return new Success(newGameProgress);
    
    }
 

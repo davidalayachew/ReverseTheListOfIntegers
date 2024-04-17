@@ -31,7 +31,7 @@ public final class Algorithm
       return result;
    
    }
-   
+
    public static Optional<GameProgress> findASolutionWithTheShortestLengthPossibleRecursive(final Map<Round, Integer> cache, final GameProgress gameProgress)
    {
    
@@ -47,12 +47,13 @@ public final class Algorithm
       
          final int index = i;
       
-         final Optional<GameProgress> combineResult = gameProgress.combine(index);
+         final Result combineResult = gameProgress.combine(index);
       
-         if (combineResult.isPresent())
+         switch (combineResult)
          {
          
-            successfulSubResults.add(combineResult.orElseThrow());
+            case  Success success   -> successfulSubResults.add(success.gameProgress());
+            case  Failure _         -> {}
          
          }
       
@@ -116,7 +117,7 @@ public final class Algorithm
       
       }
    
-      final Optional<GameProgress> mostOptimalSolution = 
+      final Optional<GameProgress> mostOptimalSolution =
          finalResults
             .stream()
             .min(Comparator.comparingInt(eachGameProgress -> eachGameProgress.rounds().size()))
@@ -157,12 +158,13 @@ public final class Algorithm
       
          final int index = i;
       
-         final Optional<GameProgress> combineResult = gameProgress.combine(index);
+         final Result combineResult = gameProgress.combine(index);
       
-         if (combineResult.isPresent())
+         switch (combineResult)
          {
          
-            successfulResults.add(combineResult.orElseThrow());
+            case  Success success   -> successfulResults.add(success.gameProgress());
+            case  Failure _         -> {}
          
          }
       

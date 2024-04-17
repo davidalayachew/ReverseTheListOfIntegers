@@ -13,7 +13,7 @@ public final class GUI
 {
 
    private final Runnable UPDATE_SCREEN;
-   private final Consumer<String> ERROR_POPUP;
+   private final Consumer<String> POPUP;
    private final Consumer<GameProgress> NEXT_ROUND;
 
    private List<GameProgress> state = new ArrayList<>();
@@ -47,7 +47,7 @@ public final class GUI
          }
          ;
    
-      this.ERROR_POPUP = errorMessage -> JOptionPane.showMessageDialog(frame, errorMessage);
+      this.POPUP = message -> JOptionPane.showMessageDialog(frame, message);
    
          this.NEXT_ROUND =
          newGameProgress ->
@@ -214,7 +214,7 @@ public final class GUI
          {
          
             button = new JButton("COMBINE");
-            actionListener = _ -> System.out.println("Not done yet.");
+            actionListener = _ -> gui.combine(roundIndex/2);
          
          }
       
@@ -249,8 +249,37 @@ public final class GUI
       switch (result)
       {
       
-         case  Failure(final String errorMessage)           -> this.ERROR_POPUP.accept(errorMessage);
-         case  Success(final GameProgress newGameProgress)  -> this.NEXT_ROUND.accept(newGameProgress);
+         case  Failure(final String errorMessage)     -> this.POPUP.accept(errorMessage);
+         case  Success(final GameProgress newState)   -> this.NEXT_ROUND.accept(newState);
+      
+      }
+   
+      if (this.state.get(this.index).hasCompleted())
+      {
+      
+         this.POPUP.accept("You won! Took you " + (this.index) + " moves! btw -- " + index);
+      
+      }
+   
+   }
+
+   private void combine(final int leftIndex)
+   {
+   
+      final Result result = this.state.get(this.index).combine(leftIndex);
+   
+      switch (result)
+      {
+      
+         case  Failure(final String errorMessage)     -> this.POPUP.accept(errorMessage);
+         case  Success(final GameProgress newState)   -> this.NEXT_ROUND.accept(newState);
+      
+      }
+      
+      if (this.state.get(this.index).hasCompleted())
+      {
+      
+         this.POPUP.accept("You won! Took you " + (index - 1) + " moves!");
       
       }
    
