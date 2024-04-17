@@ -257,7 +257,7 @@ public final class GUI
       if (this.state.get(this.index).hasCompleted())
       {
       
-         this.POPUP.accept("You won! Took you " + (this.index) + " moves! btw -- " + index);
+         this.POPUP.accept("You won! Took you " + (this.index) + " moves!");
       
       }
    
@@ -279,7 +279,7 @@ public final class GUI
       if (this.state.get(this.index).hasCompleted())
       {
       
-         this.POPUP.accept("You won! Took you " + (index - 1) + " moves!");
+         this.POPUP.accept("You won! Took you " + (this.index) + " moves!");
       
       }
    
