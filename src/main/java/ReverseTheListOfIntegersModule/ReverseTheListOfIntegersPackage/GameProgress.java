@@ -185,6 +185,14 @@ public record GameProgress(List<Round> rounds, Goal goal)
       final int rightValue = finalRoundList.get(rightIndex);
    
       final int newValue = leftValue + rightValue;
+      
+      if (newValue > Collections.max(this.goal.list()))
+      {
+      
+         return new Failure("Cannot combine to create a number greater than the largest integer in the original list!"
+         + " original list = " + this.rounds.getFirst() + " new combined number = " + newValue);
+      
+      }
    
       if (finalRoundList.contains(newValue))
       {
