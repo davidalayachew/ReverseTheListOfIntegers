@@ -15,6 +15,9 @@ public final class GUI
    private final Runnable UPDATE_SCREEN;
    private final Consumer<String> POPUP;
    private final Consumer<GameProgress> NEXT_ROUND;
+   private final List<JComponent> GUI_COMPONENTS_TO_DEACTIVATE_WHEN_GAME_ENDS = new ArrayList<>();
+   private final Runnable DEACTIVATE_GUI =
+      () -> GUI_COMPONENTS_TO_DEACTIVATE_WHEN_GAME_ENDS.forEach(each -> each.setEnabled(false));
 
    private List<GameProgress> state = new ArrayList<>();
    private int index;
@@ -219,6 +222,7 @@ public final class GUI
          }
       
          button.addActionListener(actionListener);
+         this.GUI_COMPONENTS_TO_DEACTIVATE_WHEN_GAME_ENDS.add(button);
       
          interactionPanel.add(button);
       
@@ -258,6 +262,7 @@ public final class GUI
       {
       
          this.POPUP.accept("You won! Took you " + (this.index) + " moves!");
+         this.DEACTIVATE_GUI.run();
       
       }
    
@@ -280,6 +285,7 @@ public final class GUI
       {
       
          this.POPUP.accept("You won! Took you " + (this.index) + " moves!");
+         this.DEACTIVATE_GUI.run();
       
       }
    
