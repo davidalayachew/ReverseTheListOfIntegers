@@ -10,3 +10,5 @@ This project also contains algorithms that solve the game for a given input.
 
 As of 20240415, there are 2 algorithms -- one that finds a solution quickly, and another that finds the solution with the shortest length possible
 
+UPDATE 20240501 -- Attempting to handle larger puzzles without getting a StackOverflowError -- For example -- 4, 7, 5, 2, 3, 6, 9
+

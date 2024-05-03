@@ -228,7 +228,41 @@ public final class GUI
       
       }
    
+      final JButton abcButton = new JButton("XYZ");
+      abcButton
+         .addActionListener
+         (
+            _ -> 
+            {
+            
+               final var cache = new HashMap<Round, Integer>();
+               
+               final var gameProgressThusFar = gui.state.get(gui.index);
+            
+               final var potentialSolution =
+                  Algorithm.findASolutionWithTheShortestLengthPossibleRecursive(cache, gameProgressThusFar);
+               
+               System.out.println("-------");
+               
+               potentialSolution
+                  .ifPresentOrElse
+                  (
+                     solution ->
+                        solution
+                           .rounds()
+                           .stream()
+                           .map(Round::list)
+                           .forEach(System.out::println),
+                     () -> System.out.println("NO SOLUTION POSSIBLE FROM THIS POINT!")
+                  )
+                  ;
+            
+            }
+         )
+         ;
+   
       mainPanel.add(interactionPanel, BorderLayout.CENTER);
+      mainPanel.add(abcButton, BorderLayout.SOUTH);
    
       return mainPanel;
    

@@ -32,6 +32,101 @@ public final class Algorithm
    
    }
 
+   public static Optional<GameProgress> findASolutionWithTheShortestLengthPossibleNonRecursive(final Map<Round, Integer> cache, final GameProgress gameProgress)
+   {
+   
+      Objects.requireNonNull(cache);
+      Objects.requireNonNull(gameProgress);
+   
+      final List<Integer> finalRoundList = gameProgress.rounds().getLast().list();
+   
+      final List<GameProgress> successfulSubResults = new ArrayList<>();
+   
+      for (int i = 0; i < finalRoundList.size(); i++)
+      {
+      
+         final int index = i;
+      
+         final Result combineResult = gameProgress.combine(index);
+      
+         switch (combineResult)
+         {
+         
+            case  Success success   -> successfulSubResults.add(success.gameProgress());
+            case  Failure _         -> {}
+         
+         }
+      
+         final int originalValue = finalRoundList.get(index);
+      
+         for (int j = originalValue - 1; j > 0; j--)
+         {
+         
+            final int newValue = j;
+         
+            final Result splitResult = gameProgress.split(index, newValue);
+         
+            switch (splitResult)
+            {
+            
+               case  Success success   -> successfulSubResults.add(success.gameProgress());
+               case  Failure _         -> {}
+            
+            }
+         
+         }
+      
+      }
+   
+      final List<GameProgress> finalResults = new ArrayList<>();
+   
+      LOOP:
+      for (final GameProgress eachResult : successfulSubResults)
+      {
+      
+         final int cacheValue = Algorithm.updateCache(cache, eachResult);
+      
+         if (cacheValue < eachResult.rounds().size())
+         {
+         
+            continue LOOP;
+         
+         }
+      
+         if (eachResult.hasCompleted())
+         {
+         
+            finalResults.add(eachResult);
+         
+         }
+         
+         else
+         {
+         
+            final Optional<GameProgress> subBranch =
+               Algorithm.findASolutionWithTheShortestLengthPossibleRecursive(cache, eachResult);
+         
+            if (subBranch.isPresent())
+            {
+            
+               finalResults.add(subBranch.orElseThrow());
+            
+            }
+         
+         }
+      
+      }
+   
+      final Optional<GameProgress> mostOptimalSolution =
+         finalResults
+            .stream()
+            .min(Comparator.comparingInt(eachGameProgress -> eachGameProgress.rounds().size()))
+            ;
+   
+      return mostOptimalSolution;
+   
+   }
+
    public static Optional<GameProgress> findASolutionWithTheShortestLengthPossibleRecursive(final Map<Round, Integer> cache, final GameProgress gameProgress)
    {
    
@@ -143,7 +238,7 @@ public final class Algorithm
    
    }
 
-   private static Optional<GameProgress> findASolutionQuicklyRecursive(final Map<Round, Integer> cache, final GameProgress gameProgress)
+   public static Optional<GameProgress> findASolutionQuicklyRecursive(final Map<Round, Integer> cache, final GameProgress gameProgress)
    {
    
       Objects.requireNonNull(cache);

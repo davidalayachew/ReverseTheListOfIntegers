@@ -189,8 +189,11 @@ public record GameProgress(List<Round> rounds, Goal goal)
       if (newValue > Collections.max(this.goal.list()))
       {
       
-         return new Failure("Cannot combine to create a number greater than the largest integer in the original list!"
-         + " original list = " + this.rounds.getFirst() + " new combined number = " + newValue);
+         return
+            new Failure
+            (
+               "<html>Cannot combine to create a number greater than the largest integer in the original list!<br>"
+            + "original list = " + this.rounds.getFirst().list() + "<br>new combined number = " + newValue + "</html>");
       
       }
    
